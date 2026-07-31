@@ -275,7 +275,7 @@
                 <br>
                 <b>🎲 属性分配：</b>天赋决定初始效率，理科天赋→理科效率高。
                 <br>
-                <b>🎯 彩蛋：</b>如果学生名为 "Snoozing_QwQ"，将拥有特殊属性。
+                <b>🎯 彩蛋：</b>如果学生名为 "???"，将拥有特殊属性。
             </div>
 
             <div style="margin-bottom:15px; padding:12px; border:1px dashed var(--border-color); border-radius:8px; background:var(--bg-card);">
@@ -1110,9 +1110,9 @@ const Game = {
             };
         });
 
-        // ---- 彩蛋：Snoozing_QwQ ----
+        // ---- 彩蛋：Snoozing ----
         State.students.forEach(s => {
-            if (s.name === 'Snoozing_QwQ') {
+            if (s.name === 'Snoozing') {
                 s.mastery.chi = 10;
                 s.mastery.eng = 148;
                 s.effSci = 1.2;
@@ -1132,7 +1132,7 @@ const Game = {
                 let diffTotal = baseTotal - newTotal;
                 if (diffTotal > 0) s.mastery.mat = Math.min(150, s.mastery.mat + diffTotal);
                 else if (diffTotal < 0) s.mastery.mat = Math.max(20, s.mastery.mat + diffTotal);
-                this.log(`✨ 彩蛋：Snoozing_QwQ 特殊属性已激活 (语文E，英语SSS，理科效率+20%，文科效率-99%)`, "[彩蛋]");
+                this.log(`✨ 彩蛋：Snoozing 特殊属性已激活 (语文E，英语SSS，理科效率+20%，文科效率-99%)`, "[彩蛋]");
             }
         });
 
