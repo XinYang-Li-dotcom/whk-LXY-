@@ -540,9 +540,11 @@
             <div id="ending-player" style="background:var(--bg-input); padding:15px; border:2px solid var(--gold-color); border-radius:8px; margin-bottom:20px; text-align:left; color:var(--text-secondary);"></div>
             <h3 style="color:var(--text-primary); border-bottom:2px solid var(--btn-accent); padding-bottom:4px; text-align:left; font-size:1.1em;">🗺️ 蹭饭地图</h3>
             <div id="ending-cengfan" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:8px; text-align:left; margin-bottom:20px;"></div>
-            <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-                <button style="padding:10px 25px; background:var(--btn-secondary); color:white; font-size:1em;" onclick="Game.returnToClass()">回到班级</button>
-                <button style="padding:10px 25px; background:var(--btn-primary); color:white; font-size:1em;" onclick="localStorage.removeItem('whk_save_v2'); location.reload()">重新开始</button>
+            
+            <!-- 按钮使用主题变量，确保在所有主题下可见 -->
+            <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:15px;">
+                <button style="padding:10px 25px; background:var(--btn-accent); color:white; font-size:1em; border-radius:6px; border:none; cursor:pointer; font-weight:bold;" onclick="Game.returnToClass()">🏠 回到班级</button>
+                <button style="padding:10px 25px; background:var(--btn-primary); color:white; font-size:1em; border-radius:6px; border:none; cursor:pointer; font-weight:bold;" onclick="localStorage.removeItem('whk_save_v2'); location.reload()">🔄 重新开始</button>
             </div>
         </div>
     </div>
@@ -643,10 +645,31 @@ const UI = {
         this.closeModal('event-system-modal');
     },
     closeExam() {
-        this.closeModal('exam-modal');
-        if (!State.isMockExam) Game.nextTurn();
-        else { State.isMockExam = false; Game.updateUI(); }
-    },
+    console.log('🔵 closeExam 被调用');
+    console.log('   State.week =', State.week);
+    console.log('   State.month =', State.month);
+    console.log('   Game._examWeek =', Game._examWeek);
+    
+    this.closeModal('exam-modal');
+    
+    if (!State.isMockExam) {
+        // 如果保存的考试周数 > 4，说明是月末考试，弹出月度报告
+        if (Game._examWeek > 4) {
+            console.log('   ✅ 检测到月末考试 (examWeek > 4)，生成月度报告');
+            Game.generateMonthlyReport();
+            // 重置 _examWeek，避免重复弹出
+            Game._examWeek = 0;
+        } else {
+            console.log('   ❌ 不是月末考试，不生成月度报告');
+        }
+        
+        console.log('   调用 Game.nextTurn()');
+        Game.nextTurn();
+    } else {
+        State.isMockExam = false;
+        Game.updateUI();
+    }
+},
     showHotpotModal() {
         document.getElementById('hotpot-modal').classList.remove('hidden');
     },
@@ -1016,6 +1039,7 @@ function getLevel(score, cap) {
 // Game 对象
 // ============================================================
 const Game = {
+    _examWeek: 0,
     selectMode(mode) {
         State.mode = mode;
         document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
@@ -1306,88 +1330,138 @@ const Game = {
     },
 
     nextTurn() {
-        if (State.isGraduated) return;
-        State.week++;
-        State.students.forEach(s => { if (s.sickTimer > 0) s.sickTimer--; });
-        if (State.week === 2 && State.month !== 6) { UI.showWeeklyModal(); return; }
-        if (State.week > 4) {
-            this.generateMonthlyReport();
-            State.week = 1;
-            State.month++;
-            if (State.month > 12) { State.month = 1; State.year++; }
-            this.updateWeather();
-            this.checkBirthdayEvents();
-            State.monthStartScores = State.students.map(s => Object.values(s.mastery).reduce((a, b) => a + b, 0));
-            if (State.month === 6 && State.year === 2026) {
-                document.getElementById('gaokao-modal').classList.remove('hidden');
-                this.updateUI();
-                this.updateCountdown();
-                return;
-            } else {
-                this.prepareExam();
-                this.updateCountdown();
-                return;
-            }
+    if (State.isGraduated) return;
+    State.week++;
+    State.students.forEach(s => { if (s.sickTimer > 0) s.sickTimer--; });
+    
+    if (State.week === 2 && State.month !== 6) { 
+        UI.showWeeklyModal(); 
+        return; 
+    }
+    
+    if (State.week > 4) {
+        // 注意：月度报告已经移到 closeExam 中生成
+        // 这里只处理月份切换和数据更新
+        this._examWeek = State.week;
+    
+        State.week = 1;
+        State.month++;
+        if (State.month > 12) { State.month = 1; State.year++; }
+        this.updateWeather();
+        this.checkBirthdayEvents();
+        State.monthStartScores = State.students.map(s => Object.values(s.mastery).reduce((a, b) => a + b, 0));
+        if (State.month === 6 && State.year === 2026) {
+            document.getElementById('gaokao-modal').classList.remove('hidden');
+            this.updateUI();
+            this.updateCountdown();
+            return;
+        } else {
+            this.prepareExam();
+            this.updateCountdown();
+            return;
         }
-        this.finishTurnLogic();
-        this.updateCountdown();
-    },
+    }
+    this.finishTurnLogic();
+    this.updateCountdown();
+},
 
     generateMonthlyReport() {
-        if (State.monthStartScores.length === 0) return;
-        const monthLabel = `${State.year}年${State.month}月`;
-        document.getElementById('report-month-label').textContent = monthLabel + ' 月度报告';
+    console.log('🟢 生成月度报告（对比上一次月考）');
+    
+    const monthLabel = `${State.year}年${State.month}月`;
+    document.getElementById('report-month-label').textContent = monthLabel + ' 月度报告（与上次月考对比）';
 
-        let html = '';
-        let totalStart = 0, totalEnd = 0;
-        State.students.forEach((s, idx) => {
-            const start = State.monthStartScores[idx] || 0;
-            const end = Object.values(s.mastery).reduce((a, b) => a + b, 0);
-            totalStart += start;
-            totalEnd += end;
-            const change = end - start;
-            const sign = change > 0 ? '+' : '';
-            const cls = change > 0 ? 'up' : (change < 0 ? 'down' : 'same');
+    let html = '';
+    let totalPrev = 0, totalCurr = 0;
+    let totalChange = 0;
+    let maxImprove = -Infinity;
+    let maxImproveName = '';
 
-            let subDetails = CONFIG.SUBJECTS.map(sub => {
-                const oldScore = s.mastery[sub.id] - (end - start) * (s.mastery[sub.id] / end || 0);
-                const newScore = s.mastery[sub.id];
-                const diff = newScore - oldScore;
-                return `${sub.n}${diff > 0 ? '+' : ''}${Math.round(diff)}`;
-            }).join(' | ');
+    State.students.forEach(s => {
+        const scores = s.history && s.history.scores ? s.history.scores : [];
+        const subjectScores = s.history && s.history.subjectScores ? s.history.subjectScores : [];
+        
+        // 获取当前和上一次总分
+        const currScore = scores.length >= 1 ? scores[scores.length - 1] : null;
+        const prevScore = scores.length >= 2 ? scores[scores.length - 2] : null;
 
+        // 如果连当前成绩都没有，跳过
+        if (currScore === null) {
             html += `
                 <div class="report-item">
-                    <div>
-                        <span class="name">${s.name}</span>
-                        <span class="change ${cls}">${sign}${Math.round(change)}分</span>
-                    </div>
-                    <div class="detail">${Math.round(start)} → ${Math.round(end)}</div>
-                    <div style="font-size:.7em;color:var(--text-muted);margin-top:2px;">${subDetails}</div>
+                    <div><span class="name">${s.name}</span> <span class="change same">无数据</span></div>
+                    <div class="detail">暂无考试记录</div>
                 </div>
             `;
-        });
-        document.getElementById('report-content').innerHTML = html;
+            return;
+        }
 
-        const avgStart = totalStart / State.students.length;
-        const avgEnd = totalEnd / State.students.length;
-        const avgChange = avgEnd - avgStart;
-        let maxImprove = -999, maxImproveName = '';
-        State.students.forEach((s, idx) => {
-            const change = Object.values(s.mastery).reduce((a, b) => a + b, 0) - (State.monthStartScores[idx] || 0);
-            if (change > maxImprove) { maxImprove = change; maxImproveName = s.name; }
-        });
+        const isFirstExam = (prevScore === null);
+        const change = isFirstExam ? 0 : currScore - prevScore;
+        const sign = change > 0 ? '+' : '';
+        const cls = change > 0 ? 'up' : (change < 0 ? 'down' : 'same');
 
-        document.getElementById('report-summary').innerHTML = `
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">
-                <div><div style="font-size:.7em;color:var(--text-muted);">班级均分变化</div><div style="font-weight:bold;color:${avgChange >= 0 ? 'var(--btn-success)' : 'var(--btn-danger)'};">${avgChange >= 0 ? '+' : ''}${Math.round(avgChange)}分</div></div>
-                <div><div style="font-size:.7em;color:var(--text-muted);">进步最大</div><div style="font-weight:bold;color:var(--btn-success);">${maxImproveName} (+${Math.round(maxImprove)})</div></div>
-                <div><div style="font-size:.7em;color:var(--text-muted);">班级均分</div><div style="font-weight:bold;">${Math.round(avgEnd)}</div></div>
+        totalPrev += prevScore || currScore;
+        totalCurr += currScore;
+        totalChange += change;
+
+        if (!isFirstExam && change > maxImprove) {
+            maxImprove = change;
+            maxImproveName = s.name;
+        }
+
+        // 各科变化详情（仅当有至少2次考试记录时）
+        let subDetails = '';
+        if (!isFirstExam && subjectScores.length >= 2) {
+            const currSub = subjectScores[subjectScores.length - 1];
+            const prevSub = subjectScores[subjectScores.length - 2];
+            subDetails = CONFIG.SUBJECTS.map(sub => {
+                const diff = (currSub[sub.id] || 0) - (prevSub[sub.id] || 0);
+                return `${sub.n}${diff >= 0 ? '+' : ''}${Math.round(diff)}`;
+            }).join(' | ');
+        } else if (isFirstExam && subjectScores.length >= 1) {
+            // 首次考试，显示各科原始分数
+            const currSub = subjectScores[subjectScores.length - 1];
+            subDetails = CONFIG.SUBJECTS.map(sub => {
+                return `${sub.n}${Math.round(currSub[sub.id] || 0)}`;
+            }).join(' | ');
+        }
+
+        html += `
+            <div class="report-item">
+                <div>
+                    <span class="name">${s.name}</span>
+                    <span class="change ${cls}">${isFirstExam ? '首次考试' : sign + Math.round(change) + '分'}</span>
+                </div>
+                <div class="detail">${isFirstExam ? `首次：${Math.round(currScore)}` : `${Math.round(prevScore)} → ${Math.round(currScore)}`}</div>
+                <div style="font-size:.7em;color:var(--text-muted);margin-top:2px;">${subDetails || '暂无科目详情'}</div>
             </div>
         `;
+    });
 
-        document.getElementById('monthly-report-modal').classList.remove('hidden');
-    },
+    document.getElementById('report-content').innerHTML = html;
+
+    // 班级汇总
+    const avgPrev = totalPrev / State.students.length;
+    const avgCurr = totalCurr / State.students.length;
+    const avgChange = avgCurr - avgPrev;
+
+    // 处理首次考试时进度最大显示问题
+    if (maxImprove === -Infinity) maxImprove = 0;
+
+    document.getElementById('report-summary').innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">
+            <div><div style="font-size:.7em;color:var(--text-muted);">班级均分变化</div>
+                <div style="font-weight:bold;color:${avgChange >= 0 ? 'var(--btn-success)' : 'var(--btn-danger)'};">${avgChange >= 0 ? '+' : ''}${Math.round(avgChange)}分</div></div>
+            <div><div style="font-size:.7em;color:var(--text-muted);">进步最大</div>
+                <div style="font-weight:bold;color:var(--btn-success);">${maxImproveName || '无'} ${maxImprove !== 0 ? '(' + (maxImprove > 0 ? '+' : '') + Math.round(maxImprove) + ')' : ''}</div></div>
+            <div><div style="font-size:.7em;color:var(--text-muted);">班级均分</div>
+                <div style="font-weight:bold;">${Math.round(avgCurr)}</div></div>
+        </div>
+    `;
+
+    document.getElementById('monthly-report-modal').classList.remove('hidden');
+},
 
     checkBirthdayEvents() {
         State.students.forEach(s => {
@@ -1524,6 +1598,8 @@ const Game = {
     },
 
     prepareExam(forcedName = "", isMock = false) {
+        UI._examClosed = false;
+    
         if (State.isGraduated) return;
         const m = document.getElementById('exam-modal');
         const title = forcedName || (State.month === 9 ? "起点摸底" : State.month === 1 ? "一诊" : State.month === 3 ? "二诊" : "月度联考");
@@ -1588,6 +1664,7 @@ const Game = {
         });
 
         const execRender = () => {
+            
             m.classList.remove('hidden');
             const tb = document.getElementById('exam-table');
             tb.innerHTML =
@@ -1633,6 +1710,14 @@ const Game = {
                                 r.ref.history.scores.push(r.total);
                                 if (!r.ref.history.ranks) r.ref.history.ranks = [];
                                 r.ref.history.ranks.push(r.rank);
+                                
+                                // ===== 新增：存储各科成绩 =====
+                                if (!r.ref.history.subjectScores) r.ref.history.subjectScores = [];
+                                let subScores = {};
+                                CONFIG.SUBJECTS.forEach(sub => {
+                                    subScores[sub.id] = r.scores[sub.id] || 0;
+                                });
+                                r.ref.history.subjectScores.push(subScores);
                             }
                         });
                         State.money += 1000;
@@ -1651,7 +1736,11 @@ const Game = {
         this.prepareExam("全国统一高考");
         const btn = document.getElementById('exam-close-btn');
         btn.innerText = "查看录取";
-        btn.onclick = () => { State.isGraduated = true; this.showEnding(); };
+        btn.onclick = () => { 
+            State.isGraduated = true; 
+            this.showEnding(); 
+            // 此时才显示 ending-modal
+        };
     },
 
     showEnding() {
@@ -1804,8 +1893,8 @@ function drawFullChart() {
         }
     });
 
-    // ---- 新算法：保证任意两点之间垂直间距至少 25px ----
-    const TARGET_PIXEL_GAP = 250; // 可调整，25px 足够明显
+    // ---- 新算法：保证任意两点之间垂直间距至少 150px ----
+    const TARGET_PIXEL_GAP = 200; // 从 25 提高到 150
     let yMin, yMax;
 
     if (allScores.length > 0) {
@@ -1813,50 +1902,46 @@ function drawFullChart() {
         const rawMax = Math.max(...allScores);
         const rawRange = rawMax - rawMin;
 
-        // 计算最小相邻差值（排序后）
         const sorted = [...allScores].sort((a, b) => a - b);
         let minDiff = Infinity;
         for (let i = 1; i < sorted.length; i++) {
             const diff = sorted[i] - sorted[i-1];
             if (diff < minDiff) minDiff = diff;
         }
-        if (minDiff === Infinity || minDiff === 0) minDiff = 1; // 所有分数相同
+        if (minDiff === Infinity || minDiff === 0) minDiff = 1;
 
-        // 绘图高度
         const pad = { top: 35, bottom: 50, left: 65, right: 35 };
         const drawH = H - pad.top - pad.bottom;
 
-        // 所需的最小分数范围，使得 minDiff 至少对应 TARGET_PIXEL_GAP 像素
         const requiredRange = (minDiff * drawH) / TARGET_PIXEL_GAP;
 
-        // 最终范围取原始范围、requiredRange、以及一个最小范围（如 60）的最大值
-        let finalRange = Math.max(rawRange, requiredRange, 60);
+        // 强制最小范围 100 分，确保间距足够大
+        let finalRange = Math.max(rawRange, requiredRange, 120);
 
-        // 上下各留 12% 边距，但至少 10 分
-        const margin = Math.max(finalRange * 0.12, 10);
+        const margin = Math.max(finalRange * 0.2, 20); // 边距加大到 15%
         yMin = Math.max(0, rawMin - margin);
         yMax = rawMax + margin;
 
-        // 确保范围不小于 60
-        if (yMax - yMin < 60) {
+        // 确保范围不小于 120
+        if (yMax - yMin < 120) {
             const center = (yMax + yMin) / 2;
-            yMin = Math.max(0, center - 30);
-            yMax = center + 30;
+            yMin = Math.max(0, center - 60);
+            yMax = center + 60;
         }
 
-        // 如果最高分低于 650，将上限提高到至少 680
-        if (rawMax < 650 && yMax < 650) {
-            yMax = Math.max(680, rawMax + margin);
+        // 如果最高分低于 650，上限提高到 700
+        if (rawMax < 650 && yMax < 700) {
+            yMax = Math.max(700, rawMax + margin);
         }
-        // 如果最低分高于 300，将下限降低到至少 200
-        if (rawMin > 300 && yMin > 200) {
-            yMin = Math.min(200, rawMin - margin);
+        // 如果最低分高于 300，下限降低到 180
+        if (rawMin > 300 && yMin > 180) {
+            yMin = Math.min(180, rawMin - margin);
         }
-        // 最后确保范围不小于 80（绝对保证）
-        if (yMax - yMin < 80) {
+        // 最后确保范围不小于 100
+        if (yMax - yMin < 150) {
             const center = (yMax + yMin) / 2;
-            yMin = Math.max(0, center - 40);
-            yMax = center + 40;
+            yMin = Math.max(0, center - 75);
+            yMax = center + 75;
         }
     } else {
         yMin = 0;
