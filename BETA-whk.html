@@ -813,12 +813,20 @@ const UI = {
                     const oldStress = target.stress;
                     const oldMood = target.mood;
                     fn(target);
+                    // ===== 钳制压力与心情 =====
+                    target.stress = Math.max(0, Math.min(100, target.stress));
+                    target.mood = Math.max(0, Math.min(100, target.mood));
                     const stressChange = target.stress - oldStress;
                     const moodChange = target.mood - oldMood;
                     effectDesc += `影响学生 ${target.name}：压力${stressChange >= 0 ? '+' : ''}${Math.round(stressChange)}%，心情${moodChange >= 0 ? '+' : ''}${Math.round(moodChange)}%`;
                 }
             } else {
                 fn();
+                // ===== 全班钳制 =====
+                State.students.forEach(st => {
+                    st.stress = Math.max(0, Math.min(100, st.stress));
+                    st.mood = Math.max(0, Math.min(100, st.mood));
+                });
                 effectDesc += '全班受到影响';
             }
         }
