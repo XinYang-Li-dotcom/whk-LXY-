@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>whk班主任模拟器</title>
+    <title>whk班主任模拟器V2.0</title>
     <style>
-        /* ===== 完整样式表 ===== */
+        /* ===== 完整样式表（不变） ===== */
         :root {
             --bg-primary: #f1f5f9;
             --bg-secondary: #ffffff;
@@ -266,16 +266,16 @@
     <!-- ====== 开始界面 ====== -->
     <div id="start-screen" class="overlay">
         <div class="modal-box" id="start-box-inner" style="max-width:700px; border-top:6px solid var(--btn-accent);">
-            <h1 style="color:var(--text-primary); font-size:2.2em; margin-bottom:12px; text-align:center;">whk班主任模拟器</h1>
+            <h1 style="color:var(--text-primary); font-size:2.2em; margin-bottom:12px; text-align:center;">whk班主任模拟器 V2.0</h1>
             <div style="background:var(--bg-input); padding:12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:15px; color:var(--text-secondary); line-height:1.5; font-size:.9em;">
                 <b>背景档案：</b><br>
-                你接手了一群刚刚结束信息学奥赛（OI）的退役生。他们虽思维敏捷，但文化课基础薄弱。距离高考只有不到10个月的时间。
+                你接手了一群刚刚退役的OIer。他们虽思维"敏捷"(指摸鱼)，但文化课基础薄弱。距离高考只有不到26280000秒的时间。
                 <br><br>
-                <b>📊 成绩提升模型：</b>分段效率曲线，低分段提升快，高分段提升极慢。
+                <b>📊 更真实成绩提升模型：</b>分数越低，进步越快，进步越快，分数越高，分数越低，分数越高。
                 <br>
-                <b>🎲 属性分配：</b>天赋决定初始效率，理科天赋→理科效率高。
+                <b>🎲 更加随机的属性分配：</b>天赋决定初始效率，理科天赋→理科效率高。
                 <br>
-                <b>🎯 彩蛋：</b>如果学生名为 "???"，将拥有特殊属性。
+                <b>🎯 彩蛋：</b>如果学生名为 "???"，将拥有别样的属性。
             </div>
 
             <div style="margin-bottom:15px; padding:12px; border:1px dashed var(--border-color); border-radius:8px; background:var(--bg-card);">
@@ -360,7 +360,7 @@
                     <button class="btn-mini" onclick="Game.doAction('test','bio')">生物测</button>
                 </div>
                 <button class="btn-action" onclick="UI.toggleMenu('menu-train')">
-                    <h5>🚀 特训班</h5><p>两科1.6倍自习</p><span class="cost-tag">¥2000|AP:2</span>
+                    <h5>🚀 专项训练</h5><p>选择两个科目获得1.6倍自习</p><span class="cost-tag">¥2000|AP:2</span>
                 </button>
                 <div class="sub-menu" id="menu-train">
                     <button class="btn-mini" onclick="Game.doAction('train','mat_phy')">数理强基</button>
@@ -379,14 +379,14 @@
                     <button class="btn-mini" onclick="Game.doAction('intensive','bio')">生物特训</button>
                 </div>
                 <button class="btn-action" onclick="UI.toggleMenu('menu-eff')">
-                    <h5>🧠 学法指导</h5><p>永久提升效率</p><span class="cost-tag">¥1500|AP:1</span>
+                    <h5>🧠 学法指导</h5><p>永久提升学习效率效率</p><span class="cost-tag">¥1500|AP:1</span>
                 </button>
                 <div class="sub-menu" id="menu-eff">
                     <button class="btn-mini" onclick="Game.doAction('eff','arts')">文科拓展</button>
                     <button class="btn-mini" onclick="Game.doAction('eff','sci')">理科逻辑</button>
                 </div>
                 <button class="btn-action" onclick="Game.doMockExam()">
-                    <h5>📚 全真模拟考</h5><p>含50%特殊事件</p><span class="cost-tag">¥4000|AP:2</span>
+                    <h5>📚 全真模拟考</h5><p>全部科目自习一次，并获得模拟考成绩（不计入档案）</p><span class="cost-tag">¥4000|AP:2</span>
                 </button>
                 <h4 style="margin:5px 0 4px 0; color:var(--text-muted); font-size:.7em;">☕ 状态管理</h4>
                 <button class="btn-action" onclick="UI.showDoctorModal()">
@@ -407,7 +407,7 @@
                 </button>
                 <!-- ===== 新增：勤工俭学 ===== -->
                 <button class="btn-action" onclick="Game.doAction('work','earn')">
-                    <h5>💼 勤工俭学</h5><p>赚取班费</p><span class="cost-tag">AP:1</span>
+                    <h5>💼 勤工俭学</h5><p>赚取1000元班费</p><span class="cost-tag">AP:1</span>
                 </button>
             </div>
             <div id="panel-fac" class="panel-content">
@@ -454,7 +454,7 @@
                 <div class="tutorial-step"><h4>🎨 其他</h4><p>• 高考倒计时 • 成绩走势图（悬停查看详情） • 暗色/亮色主题 • 悬停查看特质效果</p></div>
             </div>
             <div id="help-content-intro" class="help-content hidden">
-                <h4 style="margin:10px 0 5px 0; color:var(--text-primary);">🎲 随机事件（共12种）</h4>
+                <h4 style="margin:10px 0 5px 0; color:var(--text-primary);">🎲 随机事件（共13种）</h4>
                 <div id="event-list" style="display:grid; grid-template-columns:1fr 1fr; gap:6px; max-height:180px; overflow-y:auto;"></div>
                 <h4 style="margin:10px 0 5px 0; color:var(--text-primary);">🧬 特质列表</h4>
                 <div id="talent-list" style="display:grid; grid-template-columns:1fr 1fr; gap:6px; max-height:180px; overflow-y:auto;"></div>
@@ -561,10 +561,10 @@
 
 <script>
 // ============================================================
-// 完整 JavaScript 代码
+// 完整 JavaScript 代码 (修改版)
 // ============================================================
 
-// ===== UI 对象 =====
+// ===== UI 对象（不变） =====
 const UI = {
     toggleTheme() {
         const html = document.documentElement;
@@ -828,7 +828,7 @@ const UI = {
         saveGame();
     }
 };
-// ===== 续接第 1001 行 =====
+// ===== 配置（修改） =====
 const CONFIG = {
     SUBJECTS: [
         { id: 'chi', n: '语文', cap: 150, type: 'arts' },
@@ -840,10 +840,10 @@ const CONFIG = {
     ],
     FACILITIES: [
         { id: 'desk', n: '课桌椅', lv: ['破木桌', '普通课桌', '人体工学椅'], p: [0, 2000, 6000], d: '降低复习压力' },
-        { id: 'tech', n: '教学硬件', lv: ['粉笔黑板', '投影仪', '智慧屏'], p: [0, 3000, 8000], d: '提高吸收效率' },
-        { id: 'ac', n: '恒温系统', lv: ['无', '空调', '中央新风'], p: [0, 2500, 7000], d: '减免恶劣天气生病' },
+        { id: 'tech', n: '教学硬件', lv: ['粉笔黑板', '投影仪', '一体机'], p: [0, 3000, 8000], d: '提高学习效率' },
+        { id: 'ac', n: '恒温系统', lv: ['无', '老式空调', '中央空调'], p: [0, 2500, 7000], d: '减免恶劣天气生病' },
         { id: 'music', n: '校园广播网', lv: ['无', '普通广播', '沉浸音响'], p: [0, 2000, 5000], d: '每回合恢复心情' },
-        { id: 'psy', n: '心理宣泄室', lv: ['无', '兼职沙袋', '专业咨询'], p: [0, 3000, 8000], d: '每回合大幅降低压力' }
+        { id: 'psy', n: '心理宣泄室', lv: ['无', '兼职咨询', '专业咨询'], p: [0, 3000, 8000], d: '每回合大幅降低压力' }
     ],
     TALENTS: [
         { id: 't1', n: '解析眼', t: 'pos', cost: 1.2, type: 'sci', d: '理科学习效率+15%' },
@@ -858,7 +858,7 @@ const CONFIG = {
         { id: 'n1', n: '粗心', t: 'neg', cost: -0.5, type: 'all', d: '大考容易扣分' },
         { id: 'n2', n: '玻璃心', t: 'neg', cost: -0.8, type: 'all', d: '压力极易升高' },
         { id: 'n3', n: '偏科', t: 'neg', cost: -0.5, type: 'all', d: '大考随机发挥失常' },
-        { id: 'n4', n: '网瘾', t: 'neg', cost: -0.6, type: 'sci', d: '有概率翘课打游戏' },
+        { id: 'n4', n: '网瘾', t: 'neg', cost: -0.6, type: 'sci', d: '有概率翘课打游戏，且可能传播' },
         { id: 'n5', n: '多愁善感', t: 'neg', cost: -0.5, type: 'all', d: '心情极易下降' }
     ],
     UNIS: [
@@ -876,65 +876,90 @@ const CONFIG = {
         'che': [{ t: '方程式配平失败', v: -6 }, { t: '推断看错条件', v: -10 }, { t: '有机推断全对', v: 12 }, { t: '实验方案满分', v: 10 }, { t: '计算点错', v: -4 }, { t: '工业流程全对', v: 14 }],
         'bio': [{ t: '遗传算错概率', v: -8 }, { t: '概念记混', v: -10 }, { t: '基因图谱看穿', v: 12 }, { t: '选择题全对', v: 10 }, { t: '实验设计完美', v: 14 }, { t: '生态填空全错', v: -6 }]
     },
+    // ===== 全新事件列表（13个事件，更丰富） =====
     EVENTS: [
         { id: 'ev1', title: '🎮 沉迷游戏', desc: '某位同学周末偷偷跑去网吧通宵打游戏...', options: [
-            { text: '严厉批评并没收手机', effect: (s) => { s.stress += 30; s.mood -= 10; } },
-            { text: '找他谈心，了解原因', effect: (s) => { s.stress -= 20; s.mood += 10; } },
-            { text: '通知家长共同教育 (需¥500)', condition: () => State.money >= 500, cost: 500, effect: (s) => { s.stress -= 40; s.mood += 5; } }
+            { text: '严厉批评并没收手机', effect: (s) => { s.stress += 20; s.mood -= 15; } },
+            { text: '找他谈心，了解原因', effect: (s) => { s.stress -= 10; s.mood += 5; } },
+            { text: '通知家长共同教育 (需¥500)', condition: () => State.money >= 500, cost: 500, effect: (s) => { s.stress -= 20; s.mood += 5; s.mastery.mat += 2; s.mastery.eng += 2; } }
         ] },
         { id: 'ev2', title: '💡 突然顿悟', desc: '一位学生在刷题时突然打通了任督二脉！', options: [
-            { text: '表扬并鼓励分享', effect: (s) => { s.mood += 20; s.mastery.mat += 5; s.mastery.phy += 5; } },
-            { text: '安排他给全班讲解', effect: (s) => { s.mood += 10; State.students.forEach(st => { st.mastery.mat += 2; st.mastery.phy += 2; }); } },
-            { text: '奖励竞赛书 (需¥300)', condition: () => State.money >= 300, cost: 300, effect: (s) => { s.mood += 30; s.mastery.mat += 12; s.mastery.phy += 12; } }
+            { text: '表扬并鼓励分享', effect: (s) => { s.mood += 15; s.mastery.mat += 5; s.mastery.phy += 5; s.stress -= 5; } },
+            { text: '安排他给全班讲解', effect: (s) => { s.mood += 10; s.stress += 10; State.students.forEach(st => { st.mastery.mat += 2; st.mastery.phy += 2; }); } },
+            { text: '奖励竞赛书 (需¥300)', condition: () => State.money >= 300, cost: 300, effect: (s) => { s.mood += 20; s.mastery.mat += 12; s.mastery.phy += 12; s.stress -= 5; } }
         ] },
         { id: 'ev3', title: '😵 心态崩溃', desc: '模拟卷太难，某位同学当场撕了卷子...', options: [
-            { text: '严肃批评，树立纪律', effect: (s) => { s.stress += 40; s.mood -= 20; } },
-            { text: '课后心理辅导', effect: (s) => { s.stress -= 30; s.mood += 15; } },
-            { text: '安排去心理宣泄室 (需Lv≥1)', condition: () => State.fac.psy >= 1, effect: (s) => { s.stress -= 50; s.mood += 20; } }
+            { text: '严肃批评，树立纪律', effect: (s) => { s.stress += 30; s.mood -= 20; } },
+            { text: '课后心理辅导', effect: (s) => { s.stress -= 20; s.mood += 10; s.mastery.chi += 2; s.mastery.eng += 2; } },
+            { text: '安排去心理宣泄室 (需Lv≥1)', condition: () => State.fac.psy >= 1, effect: (s) => { s.stress -= 40; s.mood += 15; s.mastery.mat += 3; s.mastery.phy += 3; } }
         ] },
         { id: 'ev4', title: '📧 家长投诉', desc: '家长群里有人发长文吐槽作业太多...', options: [
-            { text: '公开回应，安抚家长', effect: () => { State.students.forEach(s => { s.stress += 10; }); } },
-            { text: '召开线上家长会', effect: () => { State.money -= 200; State.students.forEach(s => { s.mood += 5; }); } },
-            { text: '减少作业量 (需1AP)', condition: () => State.ap >= 1, costAP: 1, effect: () => { State.students.forEach(s => { s.stress -= 20; s.mood += 10; }); } }
+            { text: '公开回应，安抚家长', effect: () => { State.students.forEach(s => { s.stress += 10; s.mood -= 5; }); } },
+            { text: '召开线上家长会', effect: () => { State.money -= 200; State.students.forEach(s => { s.mood += 5; s.stress -= 5; }); } },
+            { text: '减少作业量 (需1AP)', condition: () => State.ap >= 1, costAP: 1, effect: () => { State.students.forEach(s => { s.stress -= 15; s.mood += 10; }); } }
         ] },
         { id: 'ev5', title: '🏆 竞赛获奖', desc: '某位同学在学科竞赛中获奖，全班振奋！', options: [
-            { text: '全校表扬，树立榜样', effect: (s) => { s.mood += 30; if (s.talents.length < 6 && !s.talents.some(t => t.id === 't_comp')) { s.talents.push({ id: 't_comp', n: '竞赛达人', t: 'pos', d: '理科效率+10%' }); } } },
-            { text: '发放奖金鼓励', effect: (s) => { s.mood += 20; State.money -= 500; if (s.talents.length < 6 && !s.talents.some(t => t.id === 't_money')) { s.talents.push({ id: 't_money', n: '奖金激励', t: 'pos', d: '考试发挥更稳定' }); } } }
+            { text: '全校表扬，树立榜样', effect: (s) => { s.mood += 25; if (s.talents.length < 6 && !s.talents.some(t => t.id === 't_comp')) { s.talents.push({ id: 't_comp', n: '竞赛达人', t: 'pos', d: '理科效率+10%' }); } } },
+            { text: '发放奖金鼓励', effect: (s) => { s.mood += 15; State.money -= 500; if (s.talents.length < 6 && !s.talents.some(t => t.id === 't_money')) { s.talents.push({ id: 't_money', n: '奖金激励', t: 'pos', d: '考试发挥更稳定' }); } } }
         ] },
         { id: 'ev6', title: '🤒 生病请假', desc: '换季流感，某位同学高烧缺席了本周课程。', options: [
-            { text: '让他好好休息', effect: (s) => { s.sickTimer = 2; s.stress -= 20; } },
-            { text: '安排同学送笔记', effect: (s) => { s.sickTimer = 1; s.mood += 10; } },
-            { text: '请私人医生上门 (需¥1000)', condition: () => State.money >= 1000, cost: 1000, effect: (s) => { s.sickTimer = 0; s.mood += 15; } }
+            { text: '让他好好休息', effect: (s) => { s.sickTimer = 2; s.stress -= 15; } },
+            { text: '安排同学送笔记', effect: (s) => { s.sickTimer = 1; s.mood += 8; s.mastery.chi += 2; s.mastery.eng += 2; } },
+            { text: '请私人医生上门 (需¥1000)', condition: () => State.money >= 1000, cost: 1000, effect: (s) => { s.sickTimer = 0; s.mood += 10; s.stress -= 10; } }
         ] },
         { id: 'ev7', title: '📚 奋发图强', desc: '垫底的同学痛定思痛，决定逆袭！', options: [
-            { text: '制定个人学习计划', effect: (s) => { s.mood += 10; CONFIG.SUBJECTS.forEach(sub => { s.mastery[sub.id] += 3; }); } },
-            { text: '安排一对一辅导', effect: (s) => { s.mood += 15; s.mastery.mat += 8; s.mastery.eng += 8; } },
-            { text: '购买额外习题 (需¥400)', condition: () => State.money >= 400, cost: 400, effect: (s) => { s.mood += 20; CONFIG.SUBJECTS.forEach(sub => { s.mastery[sub.id] += 6; }); } }
+            { text: '制定个人学习计划', effect: (s) => { s.mood += 10; CONFIG.SUBJECTS.forEach(sub => { s.mastery[sub.id] += 3; }); s.stress += 5; } },
+            { text: '安排一对一辅导', effect: (s) => { s.mood += 10; s.mastery.mat += 8; s.mastery.eng += 8; s.stress += 8; } },
+            { text: '购买额外习题 (需¥400)', condition: () => State.money >= 400, cost: 400, effect: (s) => { s.mood += 15; CONFIG.SUBJECTS.forEach(sub => { s.mastery[sub.id] += 6; }); s.stress += 10; } }
         ] },
         { id: 'ev8', title: '🎂 生日buff', desc: '班里给某位同学过了生日，心情大好！', options: [
-            { text: '全班庆祝', effect: (s) => { s.mood += 25; s.stress -= 20; State.students.forEach(st => { st.mood += 5; }); } },
-            { text: '送他一本好书', effect: (s) => { s.mood += 20; s.mastery.chi += 8; s.mastery.eng += 8; } },
-            { text: '组织生日派对 (需¥500)', condition: () => State.money >= 500, cost: 500, effect: (s) => { s.mood += 30; s.stress -= 30; State.students.forEach(st => { st.mood += 10; }); } }
+            { text: '全班庆祝', effect: (s) => { s.mood += 20; s.stress -= 15; State.students.forEach(st => { st.mood += 5; }); } },
+            { text: '送他一本好书', effect: (s) => { s.mood += 15; s.mastery.chi += 8; s.mastery.eng += 8; s.stress -= 5; } },
+            { text: '组织生日派对 (需¥500)', condition: () => State.money >= 500, cost: 500, effect: (s) => { s.mood += 25; s.stress -= 20; State.students.forEach(st => { st.mood += 8; }); } }
         ] },
         { id: 'ev9', title: '😰 考前焦虑', desc: '大考临近，多名学生出现焦虑症状。', options: [
-            { text: '开展考前心理辅导', effect: () => { State.students.forEach(s => { s.stress -= 15; s.mood += 5; }); } },
-            { text: '组织放松活动', effect: () => { State.students.forEach(s => { s.stress -= 25; }); } },
-            { text: '邀请专家讲座 (需¥800)', condition: () => State.money >= 800, cost: 800, effect: () => { State.students.forEach(s => { s.stress -= 35; s.mood += 15; }); } }
+            { text: '开展考前心理辅导', effect: () => { State.students.forEach(s => { s.stress -= 10; s.mood += 5; s.mastery.chi += 1; s.mastery.eng += 1; }); } },
+            { text: '组织放松活动', effect: () => { State.students.forEach(s => { s.stress -= 20; s.mood += 5; }); } },
+            { text: '邀请专家讲座 (需¥800)', condition: () => State.money >= 800, cost: 800, effect: () => { State.students.forEach(s => { s.stress -= 25; s.mood += 10; CONFIG.SUBJECTS.forEach(sub => { s.mastery[sub.id] += 2; }); }); } }
         ] },
         { id: 'ev10', title: '🎯 目标明确', desc: '一位学生突然明确了自己的目标大学，动力十足！', options: [
-            { text: '鼓励他制定计划', effect: (s) => { s.mood += 20; s.mastery.mat += 5; s.mastery.eng += 5; } },
-            { text: '分享他的目标激励全班', effect: (s) => { s.mood += 15; State.students.forEach(st => { st.mood += 5; }); } },
-            { text: '帮他联系目标大学学长 (需¥200)', condition: () => State.money >= 200, cost: 200, effect: (s) => { s.mood += 30; s.mastery.chi += 10; s.mastery.eng += 10; } }
+            { text: '鼓励他制定计划', effect: (s) => { s.mood += 15; s.mastery.mat += 5; s.mastery.eng += 5; s.stress += 5; } },
+            { text: '分享他的目标激励全班', effect: (s) => { s.mood += 10; State.students.forEach(st => { st.mood += 5; st.mastery.mat += 1; st.mastery.eng += 1; }); } },
+            { text: '帮他联系目标大学学长 (需¥200)', condition: () => State.money >= 200, cost: 200, effect: (s) => { s.mood += 20; s.mastery.chi += 10; s.mastery.eng += 10; s.stress -= 5; } }
         ] },
         { id: 'ev11', title: '🌧️ 阴雨天', desc: '连续阴雨天气，班级气氛低迷。', options: [
             { text: '放轻松音乐调节气氛', effect: () => { State.students.forEach(s => { s.mood += 5; }); } },
-            { text: '组织室内游戏', effect: () => { State.students.forEach(s => { s.stress -= 10; s.mood += 10; }); } },
-            { text: '购买小零食安慰 (需¥300)', condition: () => State.money >= 300, cost: 300, effect: () => { State.students.forEach(s => { s.mood += 15; s.stress -= 10; }); } }
+            { text: '组织室内游戏', effect: () => { State.students.forEach(s => { s.stress -= 10; s.mood += 8; }); } },
+            { text: '购买小零食安慰 (需¥300)', condition: () => State.money >= 300, cost: 300, effect: () => { State.students.forEach(s => { s.mood += 12; s.stress -= 10; }); } }
         ] },
         { id: 'ev12', title: '🌟 星光闪耀', desc: '班级在全校评比中获得优秀班级称号！', options: [
             { text: '拍照留念，张贴荣誉榜', effect: () => { State.students.forEach(s => { s.mood += 10; }); } },
-            { text: '组织班级聚餐 (需¥600)', condition: () => State.money >= 600, cost: 600, effect: () => { State.students.forEach(s => { s.mood += 20; s.stress -= 20; }); } },
-            { text: '申请班级经费奖励', effect: () => { State.money += 1000; State.students.forEach(s => { s.mood += 15; }); } }
+            { text: '组织班级聚餐 (需¥600)', condition: () => State.money >= 600, cost: 600, effect: () => { State.students.forEach(s => { s.mood += 15; s.stress -= 15; }); } },
+            { text: '申请班级经费奖励', effect: () => { State.money += 1000; State.students.forEach(s => { s.mood += 10; }); } }
+        ] },
+        // ===== 新增网瘾相关事件 =====
+        { id: 'ev13', title: '🕹️ 抓现行！', desc: '你发现某位同学上课时偷偷用手机打游戏，影响极坏。', options: [
+            { text: '没收手机并严厉批评 (消除网瘾)', effect: (s) => { 
+                s.talents = s.talents.filter(t => t.id !== 'n4'); 
+                s.mood -= 20; 
+                s.stress += 20; 
+                Game.log(`${s.name} 被没收手机，网瘾消除，但心情低落。`, "[网瘾]");
+            }},
+            { text: '课后心理辅导，引导正确使用 (需1AP)', condition: () => State.ap >= 1, costAP: 1, effect: (s) => { 
+                s.talents = s.talents.filter(t => t.id !== 'n4'); 
+                s.mood += 5; 
+                s.stress -= 10; 
+                s.mastery.chi += 2; 
+                s.mastery.eng += 2; 
+                Game.log(`${s.name} 通过心理辅导消除了网瘾。`, "[网瘾]");
+            }},
+            { text: '通知家长，加强管教 (需¥300)', condition: () => State.money >= 300, cost: 300, effect: (s) => { 
+                s.talents = s.talents.filter(t => t.id !== 'n4'); 
+                s.mood -= 10; 
+                s.stress += 5; 
+                s.mastery.mat += 4; 
+                Game.log(`${s.name} 家长介入，网瘾消除。`, "[网瘾]");
+            }}
         ] }
     ]
 };
@@ -989,6 +1014,7 @@ function checkSavedGame() {
                     if (!st.history.scores) st.history.scores = [];
                     if (!st.history.ranks) st.history.ranks = [];
                     if (typeof st.birthdayMonth === 'undefined') st.birthdayMonth = 0;
+                    if (typeof st.skipStudy === 'undefined') st.skipStudy = false; // 新增
                 });
                 State = parsed;
                 document.getElementById('start-screen').classList.add('hidden');
@@ -1040,7 +1066,7 @@ function getLevel(score, cap) {
 }
 
 // ============================================================
-// Game 对象
+// Game 对象 (修改)
 // ============================================================
 const Game = {
     _examWeek: 0,
@@ -1134,7 +1160,8 @@ const Game = {
                 mastery: mastery,
                 effArts: effArts,
                 effSci: effSci,
-                birthdayMonth: 0
+                birthdayMonth: 0,
+                skipStudy: false // 新增
             };
         });
 
@@ -1160,7 +1187,7 @@ const Game = {
                 let diffTotal = baseTotal - newTotal;
                 if (diffTotal > 0) s.mastery.mat = Math.min(150, s.mastery.mat + diffTotal);
                 else if (diffTotal < 0) s.mastery.mat = Math.max(20, s.mastery.mat + diffTotal);
-                this.log(`✨ 彩蛋：Snoozing 特殊属性已激活 (语文E，英语SSS，理科效率+20%，文科效率-99%)`, "[彩蛋]");
+                this.log(`✨ 彩蛋：Snoozing 特殊属性已激活 (语文E，英语SSS，理科效率+20%，文科效率-99%)`, "[彩蛋:语文比英语差这一块]");
             }
         });
 
@@ -1212,6 +1239,9 @@ const Game = {
         if (isArts) eff *= student.effArts;
         if (isSci) eff *= student.effSci;
         if (student.stress > 80) eff *= Math.max(0, 1 - (student.stress - 80) / 100);
+        if (student.skipStudy) { // 如果本周逃课，增益为0
+            return { gain: 0, efficiency: eff };
+        }
         return { gain: Math.max(0.02, baseGain * eff), efficiency: eff };
     },
 
@@ -1254,8 +1284,8 @@ const Game = {
             if (State.money < 1500 || State.ap < 1) return alert("资源不足！");
             State.money -= 1500; State.ap -= 1;
             State.students.forEach(s => {
-                if (sub === 'arts') s.effArts = Math.min(1.5, s.effArts + 0.05);
-                if (sub === 'sci') s.effSci = Math.min(1.5, s.effSci + 0.05);
+                if (sub === 'arts') s.effArts = Math.min(1.5, s.effArts + 0.08);
+                if (sub === 'sci') s.effSci = Math.min(1.5, s.effSci + 0.08);
             });
             this.log(`${sub === 'arts' ? '文' : '理'}科指导`, `[效率提升]`);
             UI.hideAllMenus();
@@ -1277,6 +1307,12 @@ const Game = {
 
         State.students.forEach(s => {
             if (s.sickTimer > 0) return;
+            if (s.skipStudy) {
+                // 逃课学生不获得学习增益，但可能增加压力或降低心情
+                s.stress = Math.min(100, s.stress + 5);
+                s.mood = Math.max(0, s.mood - 3);
+                return; // 跳过该学生
+            }
             if (cat === 'study' || cat === 'test') {
                 let baseGain = (sub === 'chi' ? 1.2 : 2.0) * techBonus * diffMod;
                 if (cat === 'test') baseGain *= 1.3;
@@ -1310,7 +1346,7 @@ const Game = {
         let actionName = '';
         if (cat === 'study') actionName = '自习';
         else if (cat === 'test') actionName = '小测';
-        else if (cat === 'train') actionName = '特训';
+        else if (cat === 'train') actionName = '专项训练';
         else if (cat === 'intensive') actionName = '🔥特训';
         else if (cat === 'rest') {
             if (sub === 'walk') actionName = '散步';
@@ -1545,6 +1581,7 @@ const Game = {
         if (pts > 0) { alert("请分配完所有点数！"); return; }
         State.students.forEach(s => {
             if (s.sickTimer > 0) return;
+            if (s.skipStudy) return; // 逃课学生不获得周考加成
             for (const k in State.tempAlloc) {
                 if (State.tempAlloc[k] > 0) {
                     const cap = CONFIG.SUBJECTS.find(x => x.id === k).cap;
@@ -1560,10 +1597,41 @@ const Game = {
     finishTurnLogic() {
         if (State.isGraduated) return;
         State.ap = State.maxAp;
-        State.money += 300 + (State.students.length * 60);
+        // ===== 经济修改：按难度 =====
+        let income = 1000; // 默认普通
+        if (State.diff === 'easy') income = 1500;
+        else if (State.diff === 'hard') income = 500;
+        State.money += income;
+
         const moodRegen = State.fac.music * 5;
         const stressRed = State.fac.psy * 8;
 
+        // ===== 网瘾机制 =====
+        // 1. 重置所有学生的 skipStudy
+        State.students.forEach(s => s.skipStudy = false);
+        // 2. 处理网瘾逃课和传播
+        let addicts = State.students.filter(s => s.talents.some(t => t.id === 'n4'));
+        addicts.forEach(s => {
+            // 20% 概率翘课
+            if (Math.random() < 0.20) {
+                s.skipStudy = true;
+                s.stress = Math.min(100, s.stress + 10);
+                s.mood = Math.max(0, s.mood - 5);
+                this.log(`${s.name} 因网瘾逃课打游戏！`, "[网瘾]");
+            }
+            // 10% 概率传播给随机一个无网瘾的学生
+            let candidates = State.students.filter(st => st !== s && !st.talents.some(t => t.id === 'n4'));
+            if (candidates.length > 0 && Math.random() < 0.10) {
+                let target = candidates[Math.floor(Math.random() * candidates.length)];
+                // 添加网瘾特质（如果未满6个且没有该特质）
+                if (target.talents.length < 6 && !target.talents.some(t => t.id === 'n4')) {
+                    target.talents.push({ id: 'n4', n: '网瘾', t: 'neg', cost: -0.6, type: 'sci', d: '有概率翘课打游戏，且可能传播' });
+                    this.log(`${target.name} 被 ${s.name} 传染了网瘾！`, "[网瘾传播]");
+                }
+            }
+        });
+
+        // 正常状态恢复
         State.students.forEach(s => {
             const baseDecay = s.talents.some(t => t.id === 't3') ? 8 : 4;
             s.stress = Math.max(0, s.stress - baseDecay - stressRed);
@@ -1578,6 +1646,7 @@ const Game = {
             }
         });
 
+        // 心情特质
         State.students.forEach(s => {
             if (s.mood >= 80 && Math.random() < 0.30) {
                 const posTalents = CONFIG.TALENTS.filter(t => t.t === 'pos');
@@ -1585,7 +1654,7 @@ const Game = {
                 if (available.length > 0 && s.talents.length < 6) {
                     const newT = available[Math.floor(Math.random() * available.length)];
                     s.talents.push({ ...newT });
-                    this.log(`${s.name} 因心情极佳，获得了特质【${newT.n}】`, "[心情特质]");
+                    this.log(`${s.name} 因近日情绪极佳，获得了特质【${newT.n}】`, "[心情特质]");
                 }
             } else if (s.mood <= 20 && Math.random() < 0.30) {
                 const negTalents = CONFIG.TALENTS.filter(t => t.t === 'neg');
@@ -1593,11 +1662,12 @@ const Game = {
                 if (available.length > 0 && s.talents.length < 6) {
                     const newT = available[Math.floor(Math.random() * available.length)];
                     s.talents.push({ ...newT });
-                    this.log(`${s.name} 因心情极差，获得了负面特质【${newT.n}】`, "[心情特质]");
+                    this.log(`${s.name} 因近日情绪奇差，获得了负面特质【${newT.n}】`, "[心情特质]");
                 }
             }
         });
 
+        // 事件触发（60%概率）
         if (Math.random() < 0.60) {
             this.triggerEnhancedEvent();
         }
@@ -1607,7 +1677,13 @@ const Game = {
     },
 
     triggerEnhancedEvent() {
-        const available = CONFIG.EVENTS.filter(e => !State.eventCooldowns[e.id]);
+        // 过滤掉冷却中的事件
+        let available = CONFIG.EVENTS.filter(e => !State.eventCooldowns[e.id]);
+        // 针对网瘾事件，如果班级没有网瘾学生则不触发 ev13
+        const hasAddict = State.students.some(s => s.talents.some(t => t.id === 'n4'));
+        if (!hasAddict) {
+            available = available.filter(e => e.id !== 'ev13');
+        }
         if (available.length === 0) return;
         const ev = available[Math.floor(Math.random() * available.length)];
         State.eventCooldowns[ev.id] = 3;
@@ -1968,7 +2044,7 @@ const Game = {
         document.getElementById('countdown').textContent = `⏳ 剩余 ${totalWeeks} 周`;
     }
 };
-// ===== 图表配置 =====
+// ===== 图表配置（不变） =====
 const ChartColors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
 let ChartState = [true, true, true, true, true, true];
 let ChartHoverData = [];
