@@ -799,34 +799,42 @@ const UI = {
         window._currentOptions = options;
     },
     handleEventChoice(idx) {
-        const ev = window._currentEvent;
-        const opt = window._currentOptions[idx];
-        if (!opt.available) return;
-        let effectDesc = '';
-        if (opt.cost) { State.money -= opt.cost; effectDesc += `花费 ¥${opt.cost}；`; }
-        if (opt.costAP) { State.ap -= opt.costAP; effectDesc += `消耗 ${opt.costAP}AP；`; }
-        if (opt.effect) {
-            const fn = opt.effect;
-            if (fn.length === 1) {
-                const target = Game.getRandStu(1)[0];
-                if (target) {
-                    const oldStress = target.stress;
-                    const oldMood = target.mood;
-                    fn(target);
-                    const stressChange = target.stress - oldStress;
-                    const moodChange = target.mood - oldMood;
-                    effectDesc += `影响学生 ${target.name}：压力${stressChange >= 0 ? '+' : ''}${Math.round(stressChange)}%，心情${moodChange >= 0 ? '+' : ''}${Math.round(moodChange)}%`;
-                }
-            } else {
-                fn();
-                effectDesc += '全班受到影响';
+    const ev = window._currentEvent;
+    const opt = window._currentOptions[idx];
+    if (!opt.available) return;
+    let effectDesc = '';
+    if (opt.cost) { State.money -= opt.cost; effectDesc += `花费 ¥${opt.cost}；`; }
+    if (opt.costAP) { State.ap -= opt.costAP; effectDesc += `消耗 ${opt.costAP}AP；`; }
+    if (opt.effect) {
+        const fn = opt.effect;
+        if (fn.length === 1) {
+            const target = Game.getRandStu(1)[0];
+            if (target) {
+                const oldStress = target.stress;
+                const oldMood = target.mood;
+                fn(target);
+                // ===== 钳制压力与心情 =====
+                target.stress = Math.max(0, Math.min(100, target.stress));
+                target.mood = Math.max(0, Math.min(100, target.mood));
+                const stressChange = target.stress - oldStress;
+                const moodChange = target.mood - oldMood;
+                effectDesc += `影响学生 ${target.name}：压力${stressChange >= 0 ? '+' : ''}${Math.round(stressChange)}%，心情${moodChange >= 0 ? '+' : ''}${Math.round(moodChange)}%`;
             }
+        } else {
+            fn();
+            // ===== 全班钳制 =====
+            State.students.forEach(st => {
+                st.stress = Math.max(0, Math.min(100, st.stress));
+                st.mood = Math.max(0, Math.min(100, st.mood));
+            });
+            effectDesc += '全班受到影响';
         }
-        Game.log(`事件【${ev.title}】已处理：${effectDesc}`, "[事件]");
-        UI.closeModal('event-system-modal');
-        Game.updateUI();
-        saveGame();
     }
+    Game.log(`事件【${ev.title}】已处理：${effectDesc}`, "[事件]");
+    UI.closeModal('event-system-modal');
+    Game.updateUI();
+    saveGame();
+}
 };
 // ===== 续接第 1001 行 =====
 const CONFIG = {
